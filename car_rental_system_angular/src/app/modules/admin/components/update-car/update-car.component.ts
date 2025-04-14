@@ -39,7 +39,7 @@ export class UpdateCarComponent {
       price: [null, Validators.required],
       description: [null, Validators.required],
       year: [null, Validators.required]
-    })
+    });
 
     this.getCarById();
   }
@@ -50,6 +50,7 @@ export class UpdateCarComponent {
       // console.log(res);
       this.isSpinning = false;
       const carDto = res;
+      carDto.year = new Date(carDto.year);
       this.existingImage = 'data:image/jpeg;base64,' + res.returnedImage;
       console.log(carDto);
       // console.log(this.existingImage);
@@ -69,7 +70,7 @@ export class UpdateCarComponent {
     formData.append('name', this.updateForm.get('name')?.value);
     formData.append('type', this.updateForm.get('type')?.value);
     formData.append('color', this.updateForm.get('color')?.value);
-    formData.append('year', this.updateForm.get('year')?.value);
+    formData.append('year', this.updateForm.get('year')?.value.getFullYear());
     formData.append('transmission', this.updateForm.get('transmission')?.value);
     formData.append('description', this.updateForm.get('description')?.value);
     formData.append('price', this.updateForm.get('price')?.value);

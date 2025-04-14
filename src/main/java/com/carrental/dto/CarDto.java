@@ -3,7 +3,7 @@ package com.carrental.dto;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.time.Year;
 
 @Data
 public class CarDto {
@@ -25,7 +25,7 @@ public class CarDto {
 
     private Long price;
 
-    private Date year;
+    private Year year;
 
     private MultipartFile image;
 

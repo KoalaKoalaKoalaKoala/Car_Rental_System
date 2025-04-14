@@ -4,7 +4,7 @@ import com.carrental.dto.CarDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.Year;
 
 @Entity
 @Data
@@ -29,7 +29,7 @@ public class Car {
 
     private Long price;
 
-    private Date year;
+    private Year year;
 
     @Column(columnDefinition = "longblob")
     private byte[] image;
