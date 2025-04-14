@@ -29,6 +29,9 @@ export class AdminService {
     return authHeaders.set('Authorization', 'Bearer ' + StorageService.getToken());
   }
 
+  deleteCar(id: number): Observable<any> {
+    return this.http.delete(BASIC_URL + "/api/admin/car/" + id, { headers: this.createAuthorizationHeader() });
+  }
 
 
 }
