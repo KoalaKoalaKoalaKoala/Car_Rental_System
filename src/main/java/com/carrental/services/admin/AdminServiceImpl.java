@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
 
     private final CarRepository carRepository;
 
@@ -35,7 +36,7 @@ public class AdminServiceImpl implements AdminService{
             }
             carRepository.save(car);
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -50,5 +51,34 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public void deleteCar(Long id) {
         carRepository.deleteById(id);
+    }
+
+    @Override
+    public CarDto getCarById(Long id) {
+        Optional<Car> optionalCar = carRepository.findById(id);
+        return optionalCar.map(Car::getCarDto).orElse(null);
+    }
+
+    @Override
+    public boolean updateCar(Long carId, CarDto carDto) throws IOException {
+        Optional<Car> optionalCar = carRepository.findById(carId);
+
+        if (optionalCar.isPresent()){
+            Car existingCar = optionalCar.get();
+            if (carDto.getImage() != null) {
+                existingCar.setImage(carDto.getImage().getBytes());
+            }
+            existingCar.setPrice(carDto.getPrice());
+            existingCar.setYear(carDto.getYear());
+            existingCar.setType(carDto.getType());
+            existingCar.setDescription(carDto.getDescription());
+            existingCar.setTransmission(carDto.getTransmission());
+            existingCar.setColor(carDto.getColor());
+            existingCar.setName(carDto.getName());
+            existingCar.setBrand(carDto.getBrand());
+            carRepository.save(existingCar);
+            return true;
+        }
+        else return false;
     }
 }

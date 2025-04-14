@@ -20,9 +20,9 @@ public class AdminController {
     public ResponseEntity<?> postCar(@ModelAttribute CarDto carDto) throws IOException {
         boolean success = adminService.postCar(carDto);
 
-        if (success){
+        if (success) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
@@ -39,4 +39,27 @@ public class AdminController {
         return ResponseEntity.ok(null);
     }
 
+    @GetMapping("/car/{id}")
+    public ResponseEntity<CarDto> getCarById(@PathVariable Long id) {
+
+        CarDto carDto = adminService.getCarById(id);
+        return ResponseEntity.ok(carDto);
+    }
+
+    @PutMapping("/car/{carId}")
+    public ResponseEntity<Void> updateCar(@PathVariable Long carId, @ModelAttribute CarDto carDto) throws IOException {
+        boolean success = adminService.updateCar(carId, carDto);
+
+        try {
+            if (success) {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }
+
+

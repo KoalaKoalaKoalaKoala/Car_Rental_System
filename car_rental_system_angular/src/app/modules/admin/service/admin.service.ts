@@ -13,6 +13,11 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   postCar(carDto: any): Observable<any> {
+    console.log("LOGGING FOR POSTING CAR" + BASIC_URL + "/api/admin/car", carDto,
+      {headers: this.createAuthorizationHeader()
+
+      }
+    );
     return this.http.post(BASIC_URL + "/api/admin/car", carDto,
       {headers: this.createAuthorizationHeader()
 
@@ -31,6 +36,23 @@ export class AdminService {
 
   deleteCar(id: number): Observable<any> {
     return this.http.delete(BASIC_URL + "/api/admin/car/" + id, { headers: this.createAuthorizationHeader() });
+  }
+
+  getCarById(id: number): Observable<any> {
+    return this.http.get(BASIC_URL + "/api/admin/car/" + id, { headers: this.createAuthorizationHeader() });
+  }
+
+  updateCar(carId: number,carDto: any): Observable<any> {
+    console.log("LOGGING FOR UPDATING CAR"+ BASIC_URL + "/api/admin/car/" + carId, carDto,
+      {headers: this.createAuthorizationHeader()
+
+      }
+    );
+    return this.http.put(BASIC_URL + "/api/admin/car/" + carId, carDto,
+      {headers: this.createAuthorizationHeader()
+
+      }
+    );
   }
 
 
