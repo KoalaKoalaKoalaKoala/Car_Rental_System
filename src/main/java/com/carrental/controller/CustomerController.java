@@ -1,6 +1,6 @@
 package com.carrental.controller;
 
-import com.carrental.dto.BookCarDto;
+import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
 import com.carrental.services.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ public class CustomerController {
     }
 
     @PostMapping("/car/book")
-    public ResponseEntity<Void> bookACar(@RequestBody BookCarDto bookCarDto) {
-        boolean success = customerService.bookACar(bookCarDto);
+    public ResponseEntity<Void> bookACar(@RequestBody BookACarDto bookACarDto) {
+        boolean success = customerService.bookACar(bookACarDto);
 
         if (success) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -38,10 +38,8 @@ public class CustomerController {
     @GetMapping("/car/{carId}")
     public ResponseEntity<CarDto> getCarById(@PathVariable Long carId) {
         CarDto carDto = customerService.getCarById(carId);
-        if (carDto != null) {
-            return ResponseEntity.ok(carDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (carDto == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(carDto);
+
     }
 }

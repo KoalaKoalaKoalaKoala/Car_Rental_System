@@ -1,6 +1,6 @@
 package com.carrental.services.customer;
 
-import com.carrental.dto.BookCarDto;
+import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
 import com.carrental.entity.BookACar;
 import com.carrental.entity.Car;
@@ -15,8 +15,9 @@ import java.util.concurrent.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,21 +32,21 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public List<CarDto> getAllCars() {
-        return carRepository.findAll().stream().map(Car::getCarDto).collect(toList());
+        return carRepository.findAll().stream().map(Car::getCarDto).collect(Collectors.toList());
     }
 
 
     @Override
-    public boolean bookACar(BookCarDto bookCarDto) {
-        Optional<Car> carOptional = carRepository.findById(bookCarDto.getCarId());
-        Optional<User> userOptional = userRepository.findById(bookCarDto.getUserId());
+    public boolean bookACar(BookACarDto bookACarDto) {
+        Optional<Car> carOptional = carRepository.findById(bookACarDto.getCarId());
+        Optional<User> userOptional = userRepository.findById(bookACarDto.getUserId());
         if (carOptional.isPresent() && userOptional.isPresent()) {
             Car existingCar = carOptional.get();
             BookACar bookACar = new BookACar();
             bookACar.setUser(userOptional.get());
             bookACar.setCar(existingCar);
             bookACar.setBookCarStatus(BookCarStatus.PENDING);
-            long diffInMilliSeconds = bookCarDto.getToDate().getTime() - bookCarDto.getFromDate().getTime();
+            long diffInMilliSeconds = bookACarDto.getToDate().getTime() - bookACarDto.getFromDate().getTime();
             long days = TimeUnit.MILLISECONDS.toDays(diffInMilliSeconds);
             bookACar.setDays(days);
             bookACar.setPrice(existingCar.getPrice() * days);
@@ -59,9 +60,6 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public CarDto getCarById(Long carId) {
         Optional<Car> carOptional = carRepository.findById(carId);
-        if (carOptional.isPresent()) {
-            return carOptional.get().getCarDto();
-        }
-        return null;
+        return carOptional.map(Car::getCarDto).orElse(null);
     }
 }

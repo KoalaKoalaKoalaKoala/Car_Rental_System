@@ -1,6 +1,6 @@
 package com.carrental.services.customer;
 
-import com.carrental.dto.BookCarDto;
+import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
 
 
@@ -10,7 +10,7 @@ public interface CustomerService {
 
     List<CarDto> getAllCars();
 
-    boolean bookACar(BookCarDto bookCarDto);
+    boolean bookACar(BookACarDto bookACarDto);
 
     CarDto getCarById(Long carId);
 }

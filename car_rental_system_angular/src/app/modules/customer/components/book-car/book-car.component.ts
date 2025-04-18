@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class BookCarComponent {
 
-  carId: number = this.activatedRoute.snapshot.params['id'];
+  carId: number = this.activatedRoute.snapshot.params["id"];
   car: any;
   processedImage: any;
 
@@ -24,9 +24,8 @@ export class BookCarComponent {
   getCarById() {
     this.service.getCarById(this.carId).subscribe((res) => {
       console.log(res);
-      this.car = res;
       this.processedImage = 'data:image/jpeg;base64,' + res.returnedImage;
-
+      this.car = res;
     });
   }
 }
