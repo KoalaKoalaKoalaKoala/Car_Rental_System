@@ -2,10 +2,10 @@
 
     <div style="padding-top: 10px;"></div>
 
-    <div style="margin-top:10px;" class="child" *ngFor="let car of cars">
+    <div style="margin-top:10px;" class="child">
         <div nz-row>
             <div nz-col nzSpan="8">
-                <img class="profile" style="height: 130px; width: 200px; border-radius: 10px;" [src]="car.processedImage"
+                <img class="profile" style="height: 130px; width: 200px; border-radius: 10px;" [src]="processedImage"
                     alt="profile" />
             </div>
                 <div nz-col nzSpan="16">
@@ -18,10 +18,7 @@
                         <b>{{car.transmission}}</b> - Type : <b>{{car.type}}</b> - Year : <b>{{car.year | date:
                             'yyyy'}}</b>
                     </h5>
-                    <hr>
-                    <div nz-row nzJustify="end">
-                        <button nzSize="small" nz-button nzType="primary" routerLink="/customer/book/{{car.id}}">Book</button>
-                      </div>
+
                 </div>
 
             </div>

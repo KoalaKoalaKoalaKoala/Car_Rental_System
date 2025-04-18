@@ -29,7 +29,7 @@ export class AdminService {
     return this.http.get(BASIC_URL + "/api/admin/cars", { headers: this.createAuthorizationHeader() });
   }
 
-  createAuthorizationHeader() {
+  createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     return authHeaders.set('Authorization', 'Bearer ' + StorageService.getToken());
   }
