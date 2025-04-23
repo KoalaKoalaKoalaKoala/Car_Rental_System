@@ -10,7 +10,7 @@ const BASIC_URL = ["http://localhost:8080"];
 })
 export class CustomerService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
 
   getAllCars(): Observable<any> {
@@ -19,6 +19,10 @@ export class CustomerService {
 
   getCarById(carId: number): Observable<any> {
     return this.http.get(BASIC_URL + "/api/customer/car/" + carId, { headers: this.createAuthorizationHeader() });
+  }
+
+  bookACar(bookACarDto: any): Observable<any> {
+    return this.http.post(BASIC_URL + "/api/customer/car/book", bookACarDto, { headers: this.createAuthorizationHeader() });
   }
 
   createAuthorizationHeader(): HttpHeaders {

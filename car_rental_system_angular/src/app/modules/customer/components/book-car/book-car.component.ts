@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CustomerService } from '../../service/customer.service';
-import { ActivatedRoute } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from 'src/app/auth/services/storage/storage.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'app-book-car',
   templateUrl: './book-car.component.html',
@@ -12,12 +14,23 @@ export class BookCarComponent {
   carId: number = this.activatedRoute.snapshot.params["id"];
   car: any;
   processedImage: any;
+  validateForm!: FormGroup;
+  isSpinning: boolean = false;
+  dateFormat: string = "dd-MM-yyyy";
 
 
-  constructor(private service: CustomerService, private activatedRoute: ActivatedRoute) { }
+  constructor(private service: CustomerService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private message: NzMessageService,
+    private fb: FormBuilder) { }
 
 
   ngOnInit() {
+    this.validateForm = this.fb.group({
+      toDate: [null, Validators.required],
+      fromDate: [null, Validators.required],
+    });
     this.getCarById();
   }
 
@@ -28,4 +41,23 @@ export class BookCarComponent {
       this.car = res;
     });
   }
+  bookACar(data: any) {
+     console.log(data);
+     this.isSpinning = true;
+     let bookACarDto = {
+       toDate: data.toDate,
+       fromDate: data.fromDate,
+       userId: StorageService.getUserId(),
+       carId: this.carId
+     }
+     this.service.bookACar(bookACarDto).subscribe((res) => {
+       console.log(res);
+       this.message.success("Car booking requet submitted successfully", {nzDuration: 5000});
+       this.router.navigateByUrl('/customer/dashboard');
+       this.isSpinning = false;
+     }, error => {
+       this.message.error("Something went wrong", {nzDuration: 5000});
+       this.isSpinning = false;
+     })
+   }
 }

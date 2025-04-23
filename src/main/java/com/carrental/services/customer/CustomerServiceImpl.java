@@ -11,6 +11,8 @@ import com.carrental.repository.CarRepository;
 import com.carrental.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.*;
 
 import java.util.List;
@@ -18,13 +20,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
 
-    private  final CarRepository carRepository;
-    
+    private final CarRepository carRepository;
+
     private final UserRepository userRepository;
 
     private final BookACarRepository bookACarRepository;
@@ -46,8 +47,16 @@ public class CustomerServiceImpl implements CustomerService{
             bookACar.setUser(userOptional.get());
             bookACar.setCar(existingCar);
             bookACar.setBookCarStatus(BookCarStatus.PENDING);
-            long diffInMilliSeconds = bookACarDto.getToDate().getTime() - bookACarDto.getFromDate().getTime();
-            long days = TimeUnit.MILLISECONDS.toDays(diffInMilliSeconds);
+            bookACar.setFromDate(bookACarDto.getFromDate());
+            bookACar.setToDate(bookACarDto.getToDate());
+//            long diffInMilliSeconds = bookACarDto.getToDate().ge - bookACarDto.getFromDate().getTime();
+//            long days = TimeUnit.MILLISECONDS.toDays(diffInMilliSeconds);
+            long days = ChronoUnit.DAYS.between(bookACarDto.getFromDate(), bookACarDto.getToDate());
+            if (days == 0) {
+                days = 1L;
+            } else if (days < 0) {
+                return false;
+            }
             bookACar.setDays(days);
             bookACar.setPrice(existingCar.getPrice() * days);
             bookACarRepository.save(bookACar);

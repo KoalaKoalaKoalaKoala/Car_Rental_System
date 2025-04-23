@@ -3,6 +3,7 @@ package com.carrental.dto;
 import com.carrental.enums.BookCarStatus;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -10,9 +11,9 @@ public class BookACarDto {
 
     private Long id;
 
-    private Date fromDate;
+    private LocalDate fromDate;
 
-    private Date toDate;
+    private LocalDate toDate;
 
     private Long days;
 

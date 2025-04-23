@@ -3,6 +3,8 @@ package com.carrental.configuration;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -15,10 +17,19 @@ import java.util.Map;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class SimpleCorsFilter implements Filter {
 
+    private final Logger log = LoggerFactory.getLogger(SimpleCorsFilter.class);
+
+
+    public SimpleCorsFilter() {
+        log.info("SimpleCorsFilter initialized");
+        System.out.println("SimpleCorsFilter initialized");
+    }
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
+
         Map<String, String> map = new HashMap<>();
         String originHeader = request.getHeader("origin");
         response.setHeader("Access-Control-Allow-Origin", originHeader);
