@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CustomerService } from '../../service/customer.service';
 
 @Component({
   selector: 'app-my-bookings',
@@ -6,5 +7,21 @@ import { Component } from '@angular/core';
   styleUrls: ['./my-bookings.component.scss']
 })
 export class MyBookingsComponent {
+  
+  bookings: any[] = [];
+  isSpinning = false
+
+  constructor(private customerService: CustomerService) {
+    this.getMyBookings();
+   }
+
+  getMyBookings() {
+    this.isSpinning = true;
+    this.customerService.getBookingsByUserId().subscribe((res) => {
+      this.isSpinning = false;
+      // console.log(res);
+      this.bookings = res;
+    })
+  }
 
 }
