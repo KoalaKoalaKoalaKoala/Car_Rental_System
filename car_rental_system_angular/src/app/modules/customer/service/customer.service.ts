@@ -38,9 +38,15 @@ export class CustomerService {
       );
     }
 
+    generate(message: string): Observable<any> {
+      const url = `${BASIC_URL}/api/customer/ai/generate?message=${encodeURIComponent(message)}`;
+      return this.http.get(url, { headers: this.createAuthorizationHeader() });
+    }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     return authHeaders.set('Authorization', 'Bearer ' + StorageService.getToken());
   }
+
 
 }

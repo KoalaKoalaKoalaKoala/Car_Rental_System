@@ -8,6 +8,9 @@ import { NgZorroImportsModule } from 'src/app/NgZorroImportsModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { SearchCarComponent } from './components/search-car/search-car.component';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 
 @NgModule({
@@ -15,7 +18,8 @@ import { SearchCarComponent } from './components/search-car/search-car.component
     CustomerDashboardComponent,
     BookCarComponent,
     MyBookingsComponent,
-    SearchCarComponent
+    SearchCarComponent,
+    ChatbotComponent
   ],
   imports: [
     CommonModule,
@@ -24,6 +28,8 @@ import { SearchCarComponent } from './components/search-car/search-car.component
     NgZorroImportsModule,
     ReactiveFormsModule,
     FormsModule,
+    NzAvatarModule,
+    NzCardModule,
   ]
 })
 export class CustomerModule { }
