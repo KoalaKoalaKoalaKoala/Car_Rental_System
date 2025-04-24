@@ -2,6 +2,7 @@ package com.carrental.controller;
 
 import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
+import com.carrental.dto.SearchCarDto;
 import com.carrental.services.admin.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,11 @@ public class AdminController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/car/search")
+    public ResponseEntity<?> searchCar(@RequestBody SearchCarDto searchCarDto) {
+        return ResponseEntity.ok(adminService.searchCars(searchCarDto));
     }
 }
 

@@ -2,6 +2,7 @@ package com.carrental.controller;
 
 import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
+import com.carrental.dto.SearchCarDto;
 import com.carrental.services.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,5 +48,11 @@ public class CustomerController {
     public ResponseEntity<List<BookACarDto>> getBookingsByUserId(@PathVariable Long userId) {
         List<BookACarDto> bookings = customerService.getAllBookingsByUserId(userId);
         return ResponseEntity.ok(bookings);
+    }
+
+
+    @PostMapping("/car/search")
+    public ResponseEntity<?> searchCar(@RequestBody SearchCarDto searchCarDto) {
+        return ResponseEntity.ok(customerService.searchCars(searchCarDto));
     }
 }

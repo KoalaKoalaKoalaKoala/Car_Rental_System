@@ -29,6 +29,15 @@ export class CustomerService {
     return this.http.get(BASIC_URL + "/api/customer/car/bookings/" + StorageService.getUserId(), { headers: this.createAuthorizationHeader() });
   }
 
+    searchCar(searchCarDto: any): Observable<any> {
+  
+      return this.http.post(BASIC_URL + "/api/customer/car/search", searchCarDto,
+        {headers: this.createAuthorizationHeader()
+  
+        }
+      );
+    }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     return authHeaders.set('Authorization', 'Bearer ' + StorageService.getToken());

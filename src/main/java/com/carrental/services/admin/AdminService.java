@@ -2,6 +2,8 @@ package com.carrental.services.admin;
 
 import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
+import com.carrental.dto.CarDtoListDto;
+import com.carrental.dto.SearchCarDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,4 +23,6 @@ public interface AdminService {
     List<BookACarDto> getBookings();
 
     boolean changeBookingStatus(Long bookingId, String status);
+
+    CarDtoListDto searchCars(SearchCarDto searchCarDto);
 }
