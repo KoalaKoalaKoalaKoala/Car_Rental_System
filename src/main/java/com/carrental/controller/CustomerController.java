@@ -3,21 +3,18 @@ package com.carrental.controller;
 import com.carrental.dto.BookACarDto;
 import com.carrental.dto.CarDto;
 import com.carrental.dto.SearchCarDto;
+import com.carrental.services.chatService.ChatService;
 import com.carrental.services.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
+
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +24,7 @@ import java.util.Map;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final ChatService chatService;
     @Value("${spring.ai.ollama.chat.options.model}")
     private String model;
 
@@ -89,11 +87,13 @@ public class CustomerController {
         messages.add(Map.of("role", "user", "content", message));
 
         // Call Ollama
-        String reply = callOllamaChatCompletion(messages);
-
+//        String reply = callOllamaChatCompletion(messages);
+        String reply = chatService.callChat(messages, model);
         // Update conversation history
         chatHistory.add(Map.of("role", "user", "content", message));
         chatHistory.add(Map.of("role", "assistant", "content", reply));
+
+
 
         return Map.of("generation", reply);
     }
@@ -104,23 +104,7 @@ public class CustomerController {
         return "Chat session reset.";
     }
 
-    private String callOllamaChatCompletion(List<Map<String, String>> messages) {
-        Map<String, Object> request = Map.of(
-                "model", model,  // lub "mistral", "gemma", itp.
-                "messages", messages,
-                "stream", false
-        );
 
-        Map response = webClient.post()
-                .uri("/api/chat")
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-
-        Map<String, Object> message = (Map<String, Object>) response.get("message");
-        return (String) message.get("content");
-    }
 
     private String buildPrePrompt() {
         List<CarDto> availableCars = customerService.getAllCars();
