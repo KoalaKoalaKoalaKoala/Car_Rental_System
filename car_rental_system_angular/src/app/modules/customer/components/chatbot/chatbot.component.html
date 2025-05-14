@@ -4,6 +4,13 @@
       <nz-avatar [nzText]="message.sender === 'user' ? 'U' : 'B'" [nzSize]="'small'"></nz-avatar>
       <span>{{ message.text }}</span>
     </div>
+    <!-- Typing dots indicator -->
+    <div *ngIf="isBotTyping" class="bot-message">
+      <nz-avatar [nzText]="'B'" [nzSize]="'small'"></nz-avatar>
+      <span class="typing-dots">
+        <span>.</span><span>.</span><span>.</span>
+      </span>
+    </div>
   </div>
   <div style="margin-top: 10px;">
     <nz-input-group [nzSuffix]="suffixButton">
@@ -40,5 +47,19 @@
   .bot-message span {
     background-color: #f0f0f0;
     color: black;
+  }
+  .typing-dots span {
+    animation: blink 1.5s infinite;
+    font-size: 24px; /* Increased font size for bigger dots */
+    font-weight: bold; /* Makes the dots very bold */
+    margin-right: 4px; /* Adjusted spacing between dots */
+  }
+  @keyframes blink {
+    0%, 100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 </style>

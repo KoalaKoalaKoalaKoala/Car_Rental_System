@@ -43,6 +43,11 @@ export class CustomerService {
       return this.http.get(url, { headers: this.createAuthorizationHeader() });
     }
 
+    restartSession(): Observable<any> {
+      const url = `${BASIC_URL}/api/customer/ai/reset`;
+      return this.http.get(url, { headers: this.createAuthorizationHeader(), responseType: 'text' });
+    }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeaders: HttpHeaders = new HttpHeaders();
     return authHeaders.set('Authorization', 'Bearer ' + StorageService.getToken());

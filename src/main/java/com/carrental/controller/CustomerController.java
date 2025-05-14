@@ -9,11 +9,15 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +27,13 @@ import java.util.Map;
 public class CustomerController {
 
     private final CustomerService customerService;
+    @Value("${spring.ai.ollama.chat.options.model}")
+    private String model;
+
     private final OllamaChatModel chatModel;
+    private final List<Map<String, String>> chatHistory = new ArrayList<>();
+    private final WebClient webClient = WebClient.create("http://localhost:11434");
+
 
 
     @GetMapping("/cars")
@@ -64,38 +74,67 @@ public class CustomerController {
     }
 
     @GetMapping("/ai/generate")
-    public Map<String,String> generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
+    public Map<String, String> generate(@RequestParam(value = "message", defaultValue = " ") String message) {
+        String prePrompt = buildPrePrompt();
 
-        // Fetch data from the database
-        List<CarDto> availableCars = customerService.getAllCars();
+        List<Map<String, String>> messages = new ArrayList<>();
 
-        // Format the data into a string
-        StringBuilder carInfo = new StringBuilder("Here are some available cars:\n");
-        for (CarDto car : availableCars) {
-            carInfo.append("- ").append(car.getBrand()).append(" ").append(car.getName())
-                    .append(", Price: ").append(car.getPrice()).append(" per day\n");
-        }
+        // System prompt
+        messages.add(Map.of("role", "system", "content", prePrompt));
 
-        String prePrompt = "Jesteś asystentem w wypożyczalni samochodów o nazwie 'Wypożyczalnia samochodów BFM'. Możesz pomagać w sprawach związanych z wypożyczaniem samochodów. Nie można z Tobą negocjować cen" +
-                "Tutaj informacje o samochodach:" +
-                carInfo.toString() +
-                "Firma jest zlokalizowana w Krakowie przy ul. Długa 1A, oferuje możliwość dostarczenia samochodu do Balic, na terenie Krakowa, oraz okolicznych miast w promieniu 50km, tel. kontaktowy 123-456-789" +
-                "Przykładowe pytania do Ciebie oraz odpowiedzi:" +
-                "'Pytanie: Jakie dokumenty są potrzebne, aby wypożyczyć samochód w Wypożyczalni samochodów BFM?\n" +
-                "Odpowiedź: Dzień dobry! W Wypożyczalni samochodów BFM do wypożyczenia pojazdu potrzebne jest ważne prawo jazdy, dowód osobisty lub paszport oraz karta płatnicza na nazwisko osoby wynajmującej. Zapraszamy do kontaktu, jeśli ma Pan/Pani dodatkowe pytania!\n" +
-                "Pytanie: Czy w Wypożyczalni samochodów BFM można wypożyczyć samochód z automatyczną skrzynią biegów?\n" +
-                "Odpowiedź: Oczywiście! W Wypożyczalni samochodów BFM oferujemy szeroki wybór pojazdów, w tym modele z automatyczną skrzynią biegów. Prosimy o kontakt, aby sprawdzić dostępność i zarezerwować odpowiedni samochód dla Pana/Pani.\n" +
-                "Pytanie: Jak długo można wypożyczyć samochód w Wypożyczalni samochodów BFM?\n" +
-                "Odpowiedź: Witamy serdecznie! W Wypożyczalni samochodów BFM oferujemy elastyczne okresy wynajmu – od jednego dnia do nawet kilku miesięcy. Prosimy o podanie preferowanego terminu, a my z przyjemnością przygotujemy dla Pana/Pani najlepszą ofertę!'" +
-                "Pytanie: ";
+        // Previous conversation history
+        messages.addAll(chatHistory);
 
-        return Map.of("generation", this.chatModel.call(prePrompt  + message));
+        // Current user message
+        messages.add(Map.of("role", "user", "content", message));
+
+        // Call Ollama
+        String reply = callOllamaChatCompletion(messages);
+
+        // Update conversation history
+        chatHistory.add(Map.of("role", "user", "content", message));
+        chatHistory.add(Map.of("role", "assistant", "content", reply));
+
+        return Map.of("generation", reply);
     }
 
-    @GetMapping("/ai/generateStream")
-    public Flux<ChatResponse> generateStream(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
-        Prompt prompt = new Prompt(new UserMessage(message));
-        return this.chatModel.stream(prompt);
+    @GetMapping("/ai/reset")
+    public String restartSession() {
+        chatHistory.clear();
+        return "Chat session reset.";
+    }
+
+    private String callOllamaChatCompletion(List<Map<String, String>> messages) {
+        Map<String, Object> request = Map.of(
+                "model", model,  // lub "mistral", "gemma", itp.
+                "messages", messages,
+                "stream", false
+        );
+
+        Map response = webClient.post()
+                .uri("/api/chat")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+        Map<String, Object> message = (Map<String, Object>) response.get("message");
+        return (String) message.get("content");
+    }
+
+    private String buildPrePrompt() {
+        List<CarDto> availableCars = customerService.getAllCars();
+        StringBuilder carInfo = new StringBuilder("Tutaj są dostępne samochody:\n");
+        for (CarDto car : availableCars) {
+            carInfo.append("- ").append(car.getBrand()).append(" ").append(car.getName())
+                    .append(", Cena: ").append(car.getPrice()).append(" za dzień\n");
+        }
+
+        return "Pisz domyślnie w języku polskim, Jesteś asystentem w wypożyczalni samochodów o nazwie 'Wypożyczalnia samochodów BFM'! Możesz pomagać w sprawach związanych z wypożyczaniem samochodów. Nie można z Tobą negocjować cen. Bądź poważny. Odpowiadaj wyczerpująco i podaj informacje konieczne do wypożyczenia."
+                + " Tutaj informacje o samochodach:\n" + carInfo
+                + "\n Pisz w języku pytającego, poczekaj na pytanie i pomóż wypożyczyć samochód klientami. "
+                + "Nie witaj się z piszącym (nie pisz dzień dobry ani nic podobnego, jest to już napisane zanim ktoś do Ciebie napisał). "
+                + "Firma jest zlokalizowana w Krakowie przy ul. Długa 1A, oferuje możliwość dostarczenia samochodu do Balic, na terenie Krakowa, oraz okolicznych miast w promieniu 50km, tel. kontaktowy 123-456-789.";
     }
 
 }
