@@ -77,19 +77,14 @@ public class CustomerController {
 
         List<Map<String, String>> messages = new ArrayList<>();
 
-        // System prompt
         messages.add(Map.of("role", "system", "content", prePrompt));
 
-        // Previous conversation history
         messages.addAll(chatHistory);
 
-        // Current user message
         messages.add(Map.of("role", "user", "content", message));
 
-        // Call Ollama
-//        String reply = callOllamaChatCompletion(messages);
+
         String reply = chatService.callChat(messages, model);
-        // Update conversation history
         chatHistory.add(Map.of("role", "user", "content", message));
         chatHistory.add(Map.of("role", "assistant", "content", reply));
 

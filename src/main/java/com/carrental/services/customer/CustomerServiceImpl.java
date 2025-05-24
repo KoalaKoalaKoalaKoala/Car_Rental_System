@@ -17,7 +17,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +52,6 @@ public class CustomerServiceImpl implements CustomerService {
             bookACar.setBookCarStatus(BookCarStatus.PENDING);
             bookACar.setFromDate(bookACarDto.getFromDate());
             bookACar.setToDate(bookACarDto.getToDate());
-//            long diffInMilliSeconds = bookACarDto.getToDate().ge - bookACarDto.getFromDate().getTime();
-//            long days = TimeUnit.MILLISECONDS.toDays(diffInMilliSeconds);
             long days = ChronoUnit.DAYS.between(bookACarDto.getFromDate(), bookACarDto.getToDate());
             if (days == 0) {
                 days = 1L;
