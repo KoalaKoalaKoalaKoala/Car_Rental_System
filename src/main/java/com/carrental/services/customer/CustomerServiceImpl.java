@@ -39,6 +39,12 @@ public class CustomerServiceImpl implements CustomerService {
         return carRepository.findAll().stream().map(Car::getCarDto).collect(Collectors.toList());
     }
 
+    @Override
+    public List<BookACarDto> getAllBookings() {
+        return bookACarRepository.findAll().stream()
+                .map(BookACar::getBookACarDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public boolean bookACar(BookACarDto bookACarDto) {
@@ -52,6 +58,7 @@ public class CustomerServiceImpl implements CustomerService {
             bookACar.setBookCarStatus(BookCarStatus.PENDING);
             bookACar.setFromDate(bookACarDto.getFromDate());
             bookACar.setToDate(bookACarDto.getToDate());
+            bookACar.setCarName(existingCar.getBrand() +" " + existingCar.getName());
             long days = ChronoUnit.DAYS.between(bookACarDto.getFromDate(), bookACarDto.getToDate());
             if (days == 0) {
                 days = 1L;

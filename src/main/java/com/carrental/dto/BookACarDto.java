@@ -22,6 +22,8 @@ public class BookACarDto {
 
     private Long carId;
 
+    private String carName;
+
     private Long userId;
 
     private String username;

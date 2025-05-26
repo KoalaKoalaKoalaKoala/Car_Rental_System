@@ -28,6 +28,8 @@ public class BookACar {
 
     private BookCarStatus bookCarStatus;
 
+    private String carName;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -50,6 +52,7 @@ public class BookACar {
         bookACarDto.setPrice(this.price);
         bookACarDto.setBookCarStatus(this.bookCarStatus);
         bookACarDto.setCarId(this.car.getId());
+        bookACarDto.setCarName(this.car.getName());
         bookACarDto.setUserId(this.user.getId());
         bookACarDto.setUsername(this.user.getUsername());
         bookACarDto.setEmail(this.user.getEmail());

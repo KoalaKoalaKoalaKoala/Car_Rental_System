@@ -103,17 +103,35 @@ public class CustomerController {
 
     private String buildPrePrompt() {
         List<CarDto> availableCars = customerService.getAllCars();
-        StringBuilder carInfo = new StringBuilder("Tutaj są dostępne samochody:\n");
+        List<BookACarDto> bookedCars = customerService.getAllBookings();
+        StringBuilder carInfo = new StringBuilder("Dostępne samochody:\n");
         for (CarDto car : availableCars) {
-            carInfo.append("- ").append(car.getBrand()).append(" ").append(car.getName())
-                    .append(", Cena: ").append(car.getPrice()).append(" za dzień\n");
+            carInfo.append("- ").append(car.getBrand()).append(" ").append(car.getName()).append(", Id: ")
+                    .append(car.getId()).append(", Cena: ").append(car.getPrice()).append(" za dzień\n");
+        }
+        StringBuilder rantalInfo = new StringBuilder("Rezerwacje:\n");
+        for (BookACarDto booking : bookedCars) {
+            rantalInfo.append("- samochod: ").append(booking.getCarName())
+                    .append(", od: ").append(booking.getFromDate())
+                    .append(", do: ").append(booking.getToDate())
+                    .append(", cena: ").append(booking.getPrice())
+                    .append(", status rezerwacji: ").append(booking.getBookCarStatus()).append("\n");
         }
 
-        return "Pisz domyślnie w języku polskim, Jesteś asystentem w wypożyczalni samochodów o nazwie 'Wypożyczalnia samochodów BFM'! Możesz pomagać w sprawach związanych z wypożyczaniem samochodów. Nie można z Tobą negocjować cen. Bądź poważny. Odpowiadaj wyczerpująco i podaj informacje konieczne do wypożyczenia."
-                + " Tutaj informacje o samochodach:\n" + carInfo
-                + "\n Pisz w języku pytającego, poczekaj na pytanie i pomóż wypożyczyć samochód klientami. "
-                + "Nie witaj się z piszącym (nie pisz dzień dobry ani nic podobnego, jest to już napisane zanim ktoś do Ciebie napisał). "
-                + "Firma jest zlokalizowana w Krakowie przy ul. Długa 1A, oferuje możliwość dostarczenia samochodu do Balic, na terenie Krakowa, oraz okolicznych miast w promieniu 50km, tel. kontaktowy 123-456-789.";
+        return "Pisz domyślnie w języku polskim, Jesteś asystentem w wypożyczalni samochodów" +
+                " o nazwie 'Wypożyczalnia samochodów BFM'!" +
+                " Możesz pomagać w sprawach związanych z wypożyczaniem samochodów. Nie można z Tobą negocjować cen." +
+                " Bądź poważny. Odpowiadaj wyczerpująco i podaj informacje konieczne do wypożyczenia." +
+                " Tutaj informacje o samochodach:\n" + carInfo +
+                " Tutaj informacje o rezerwacjach, sprawdź je jeśli klient zapyta o dostępność:\n" + rantalInfo +
+                " \n" + " Poczekaj na pytanie i pomóż wypożyczyć samochód klientami." +
+                " Nie witaj się z piszącym (nie pisz dzień dobry ani nic podobnego," +
+                " jest to już napisane zanim ktoś do Ciebie napisał)." +
+                " Firma jest zlokalizowana w Krakowie przy ul. Długa 1A," +
+                " oraz oferuje możliwość dostarczenia samochodu do Balic," +
+                " na terenie Krakowa, oraz okolicznych miast w promieniu 50km," +
+                " w razie dodatkowych pytań, tel. kontaktowy 123-456-789." +
+                " Do wynajęcia samochodu potrzebne jest prawo jazdy, dowód osobisty lub paszport," +
+                " przed wynajęciem samochodu należy podpisać umowę wynajmu oraz wpłacić zaliczkę o wysokości 1000zł";
     }
-
 }
