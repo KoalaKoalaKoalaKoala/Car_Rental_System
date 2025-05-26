@@ -9,7 +9,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -28,6 +27,8 @@ public class BookACar {
     private Long price;
 
     private BookCarStatus bookCarStatus;
+
+    private String carName;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -51,6 +52,7 @@ public class BookACar {
         bookACarDto.setPrice(this.price);
         bookACarDto.setBookCarStatus(this.bookCarStatus);
         bookACarDto.setCarId(this.car.getId());
+        bookACarDto.setCarName(this.car.getName());
         bookACarDto.setUserId(this.user.getId());
         bookACarDto.setUsername(this.user.getUsername());
         bookACarDto.setEmail(this.user.getEmail());

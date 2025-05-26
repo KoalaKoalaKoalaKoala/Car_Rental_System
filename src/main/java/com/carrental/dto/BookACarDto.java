@@ -4,7 +4,6 @@ import com.carrental.enums.BookCarStatus;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class BookACarDto {
@@ -22,6 +21,8 @@ public class BookACarDto {
     private BookCarStatus bookCarStatus;
 
     private Long carId;
+
+    private String carName;
 
     private Long userId;
 

@@ -22,7 +22,9 @@ public class JWTUtil {
     }
 
     public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+        String token  = generateToken(new HashMap<>(), userDetails);
+        System.out.println("\n\n Generated JWT Token: \n" + token+ "\n\n");
+        return token;
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

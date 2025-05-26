@@ -50,6 +50,17 @@ export class BookCarComponent {
        userId: StorageService.getUserId(),
        carId: this.carId
      }
+     if (bookACarDto.toDate < bookACarDto.fromDate) {
+       this.message.error("To date should be greater than from date", { nzDuration: 5000 });
+       this.isSpinning = false;
+       return;
+     }
+     console.log(data.toDate, data.fromDate);
+
+     console.log(data.toDate + 1, data.fromDate);
+     
+
+     
      this.service.bookACar(bookACarDto).subscribe((res) => {
        console.log(res);
        this.message.success("Car booking requet submitted successfully", {nzDuration: 5000});
@@ -60,4 +71,7 @@ export class BookCarComponent {
        this.isSpinning = false;
      })
    }
+
+
+   
 }
