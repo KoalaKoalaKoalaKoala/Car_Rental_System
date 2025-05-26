@@ -74,21 +74,15 @@ public class CustomerController {
     @GetMapping("/ai/generate")
     public Map<String, String> generate(@RequestParam(value = "message", defaultValue = " ") String message) {
         String prePrompt = buildPrePrompt();
-
         List<Map<String, String>> messages = new ArrayList<>();
 
         messages.add(Map.of("role", "system", "content", prePrompt));
-
         messages.addAll(chatHistory);
-
         messages.add(Map.of("role", "user", "content", message));
-
 
         String reply = chatService.callChat(messages, model);
         chatHistory.add(Map.of("role", "user", "content", message));
         chatHistory.add(Map.of("role", "assistant", "content", reply));
-
-
 
         return Map.of("generation", reply);
     }
