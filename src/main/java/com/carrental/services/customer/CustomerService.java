@@ -18,6 +18,8 @@ public interface CustomerService {
 
     List<BookACarDto> getAllBookingsByUserId(Long userId);
 
+    List<BookACarDto> getAllBookings();
+
     CarDtoListDto searchCars(SearchCarDto searchCarDto);
 
 }
