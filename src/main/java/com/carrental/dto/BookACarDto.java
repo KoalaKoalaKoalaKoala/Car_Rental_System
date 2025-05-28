@@ -24,6 +24,8 @@ public class BookACarDto {
 
     private Long userId;
 
+    private String carName;
+
     private String username;
 
     private String email;
