@@ -81,6 +81,7 @@ public class CustomerController {
         messages.add(Map.of("role", "user", "content", message));
 
         String reply = chatService.callChat(messages, model);
+        reply = reply.replaceAll("(?s)<think>.*?</think>", "").trim();
         chatHistory.add(Map.of("role", "user", "content", message));
         chatHistory.add(Map.of("role", "assistant", "content", reply));
 
@@ -119,12 +120,11 @@ public class CustomerController {
                 " Tutaj informacje o samochodach:\n" + carInfo +
                 " Tutaj informacje o rezerwacjach, sprawdź je jeśli klient zapyta o dostępność:\n" + rantalInfo +
                 " \n" + " Poczekaj na pytanie i pomóż wypożyczyć samochód klientami." +
-                " Nie witaj się z piszącym (nie pisz dzień dobry ani nic podobnego," +
-                " jest to już napisane zanim ktoś do Ciebie napisał)." +
                 " Firma jest zlokalizowana w Krakowie przy ul. Długa 1A," +
                 " oraz oferuje możliwość dostarczenia samochodu do Balic," +
                 " na terenie Krakowa, oraz okolicznych miast w promieniu 50km," +
                 " w razie dodatkowych pytań, tel. kontaktowy 123-456-789." +
                 " Do wynajęcia samochodu potrzebne jest prawo jazdy, dowód osobisty lub paszport," +
                 " przed wynajęciem samochodu należy podpisać umowę wynajmu oraz wpłacić zaliczkę o wysokości 1000zł";
-    }}
+    }
+}
