@@ -119,8 +119,6 @@ public class CustomerController {
                 " Tutaj informacje o samochodach:\n" + carInfo +
                 " Tutaj informacje o rezerwacjach, sprawdź je jeśli klient zapyta o dostępność:\n" + rantalInfo +
                 " \n" + " Poczekaj na pytanie i pomóż wypożyczyć samochód klientami." +
-                " Nie witaj się z piszącym (nie pisz dzień dobry ani nic podobnego," +
-                " jest to już napisane zanim ktoś do Ciebie napisał)." +
                 " Firma jest zlokalizowana w Krakowie przy ul. Długa 1A," +
                 " oraz oferuje możliwość dostarczenia samochodu do Balic," +
                 " na terenie Krakowa, oraz okolicznych miast w promieniu 50km," +
